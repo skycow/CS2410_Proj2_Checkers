@@ -43,6 +43,7 @@ public class Checker {
     //public void setX(int xIn) { xPos = xIn; }
     //public void setY(int yIn) { yPos = yIn; }
     public void setColor(Color colorIn) { color = colorIn; }
+    public Color getColor() { return color;}
 
     /*public void drawChecker(int col, int row, Graphics g){
         g.setColor(color);
