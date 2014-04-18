@@ -6,11 +6,11 @@ import java.awt.*;
 public class Checker {
 
     private Color color;
+    private int xPos, yPos;
 
 
     public Checker(){
 
-        color = Color.WHITE;
     }
 
     public Checker(Color colorIn){
@@ -18,13 +18,13 @@ public class Checker {
 
     }
 
-    public void setColor(Color value) {
-        color = value;
-    }
+    //public void setX(int xIn) { xPos = xIn; }
+    //public void setY(int yIn) { yPos = yIn; }
+    public void setColor(Color colorIn) { color = colorIn; }
 
-    public void drawChecker(int xPos, int yPos, Color colorIn, Graphics g){
-        g.setColor(colorIn);
-        g.fillOval(80 * xPos +10, 80 * yPos +10, 60, 60);
+    public void drawChecker(int col, int row, Graphics g){
+        g.setColor(color);
+        g.fillOval(80 * col +10, 80 * row +10, 60, 60);
 
     }
 }

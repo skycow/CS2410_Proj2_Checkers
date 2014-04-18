@@ -10,10 +10,12 @@ public class Board extends JPanel implements MouseListener{
     private final int SQRSIZE = 80;
     private Checker [] [] board = new Checker [8] [8];
     private Checker [] pieces = new Checker [16];
+    private Point choice1 = new Point(-1, -1);
+    private Point choice2 = new Point(-1, -1);
 
     public Board(){
         //setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(644, 644));
+        setPreferredSize(new Dimension(640, 640));
     }
 
     public void paintComponent(Graphics g) {
@@ -50,19 +52,28 @@ public class Board extends JPanel implements MouseListener{
 
         //checkers
         for(int row = 0; row < 1; row++)
-            for(int col = 1; col < 8; col+=2)
-                board[row][col].drawChecker(col, row, Color.BLACK, g);
+            for(int col = 0; col < 8; col+=2){
+                board[row][col].setColor(Color.BLUE);
+                board[row][col].drawChecker(col, row, g);
+            }
+
         for(int row = 1; row < 2; row++)
-            for(int col = 0; col < 8; col+=2)
-                board[row][col].drawChecker(col, row, Color.BLACK, g);
+            for(int col = 1; col < 8; col+=2){
+                board[row][col].setColor(Color.BLUE);
+                board[row][col].drawChecker(col, row, g);
+            }
 
         //checkers
         for(int row = 6; row < 7; row++)
-            for(int col = 0; col < 8; col+=2)
-                board[row][col].drawChecker(col, row, Color.RED, g);
+            for(int col = 0; col < 8; col+=2){
+                board[row][col].setColor(Color.GREEN);
+                board[row][col].drawChecker(col, row, g);
+            }
         for(int row = 7; row < 8; row++)
-            for(int col = 1; col < 8; col+=2)
-                board[row][col].drawChecker(col, row, Color.RED, g);
+            for(int col = 1; col < 8; col+=2){
+                board[row][col].setColor(Color.GREEN);
+                board[row][col].drawChecker(col, row, g);
+            }
 
     }
 
@@ -82,6 +93,17 @@ public class Board extends JPanel implements MouseListener{
         int yPos = (e.getY()/SQRSIZE);
 
         System.out.println(xPos +" "+ yPos);
+
+        if(choice1.x == -1){
+            choice1.x = xPos;
+            choice1.y = yPos;
+        } else if(choice1.x == xPos && choice1.y == yPos){
+            choice1.x = -1;
+            choice1.y = -1;
+        } else{
+            choice2.x = xPos;
+            choice2.y = yPos;
+        }
 
     }
 
