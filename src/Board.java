@@ -135,8 +135,9 @@ public class Board extends JPanel implements MouseListener{
             choice2.x = xPos;
             choice2.y = yPos;
 
-            //Checker newCheck = new Checker(choice2, SQRSIZE, Color.ORANGE);
+            Checker newCheck = new Checker(choice2, SQRSIZE, Color.ORANGE);
             pieces.get(choice2.x).set(choice2.y, pieces.get(choice1.x).remove(choice1.y));
+            pieces.get(choice1.x).set(choice1.y, newCheck);
 
             System.out.println("testpoint1");
             choice1.x = -1;
