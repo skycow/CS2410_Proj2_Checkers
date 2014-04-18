@@ -44,9 +44,15 @@ public class Checker {
     //public void setY(int yIn) { yPos = yIn; }
     public void setColor(Color colorIn) { color = colorIn; }
 
-    public void drawChecker(int col, int row, Graphics g){
+    /*public void drawChecker(int col, int row, Graphics g){
         g.setColor(color);
         g.fillOval(80 * col +10, 80 * row +10, 60, 60);
+
+    }*/
+
+    public void drawChecker(Graphics g){
+        g.setColor(color);
+        g.fillOval(80 * xPos +10, 80 * yPos +10, 60, 60);
 
     }
 }

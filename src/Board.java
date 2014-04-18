@@ -16,15 +16,9 @@ public class Board extends JPanel implements MouseListener{
     private Point choice2 = new Point(-1, -1);
 
     public Board(){
-        //setBackground(Color.BLACK);
         setPreferredSize(new Dimension(640, 640));
-
-        /*for(List<Checker> l: pieces){
-            for(Checker c: l){
-            c = null;
-            }
-        }*/
-
+        addMouseListener(this);
+        //initalizing 2d array
         for(int i = 0; i<8;i++){
             List<Checker> newList = new ArrayList<Checker>();
             pieces.add(i, newList);
@@ -34,12 +28,44 @@ public class Board extends JPanel implements MouseListener{
             }
         }
 
+        //checkers
+        for(int row = 0; row < 1; row++)
+            for(int col = 0; col < 8; col+=2){
+                //board[row][col].setColor(Color.BLUE);
+                //board[row][col].drawChecker(col, row, g);
+                Checker newCheck = new Checker(col, row, SQRSIZE, Color.BLUE);
+                pieces.get(col).set(row, newCheck);
+            }
+
+        for(int row = 1; row < 2; row++)
+            for(int col = 1; col < 8; col+=2){
+                //board[row][col].setColor(Color.BLUE);
+                //board[row][col].drawChecker(col, row, g);
+                Checker newCheck = new Checker(col, row, SQRSIZE, Color.BLUE);
+                pieces.get(col).set(row, newCheck);
+            }
+
+        //checkers
+        for(int row = 6; row < 7; row++)
+            for(int col = 0; col < 8; col+=2){
+                //board[row][col].setColor(Color.GREEN);
+                //board[row][col].drawChecker(col, row, g);
+                Checker newCheck = new Checker(col, row, SQRSIZE, Color.GREEN);
+                pieces.get(col).set(row, newCheck);
+            }
+        for(int row = 7; row < 8; row++)
+            for(int col = 1; col < 8; col+=2){
+                //board[row][col].setColor(Color.GREEN);
+                //board[row][col].drawChecker(col, row, g);
+
+                Checker newCheck = new Checker(col, row, SQRSIZE, Color.GREEN);
+                pieces.get(col).set(row, newCheck);
+            }
+
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        addMouseListener(this);
 
         //black components
         g.setColor(Color.BLACK);
@@ -62,39 +88,19 @@ public class Board extends JPanel implements MouseListener{
             for(int col = 1; col < 8; col+=2)
                 g.fillRect(SQRSIZE * col, SQRSIZE * row, SQRSIZE, SQRSIZE);
 
+        //for(int i = 0; i < 8; i++)
+            //for(int j = 0; j <8; j++)
+                //board[i][j] = new Checker();
 
+        /////////////////////////
 
-        for(int i = 0; i < 8; i++)
-            for(int j = 0; j <8; j++)
-                board[i][j] = new Checker();
-
-        //checkers
-        for(int row = 0; row < 1; row++)
-            for(int col = 0; col < 8; col+=2){
-                board[row][col].setColor(Color.BLUE);
-                board[row][col].drawChecker(col, row, g);
+        for(int i = 0; i<8;i++){
+            //List<Checker> newList = new ArrayList<Checker>();
+            //pieces.get(i);
+            for(int j = 0; j<8; j++){
+                pieces.get(i).get(j).drawChecker(g);
             }
-
-        for(int row = 1; row < 2; row++)
-            for(int col = 1; col < 8; col+=2){
-                board[row][col].setColor(Color.BLUE);
-                board[row][col].drawChecker(col, row, g);
-            }
-
-        //checkers
-        for(int row = 6; row < 7; row++)
-            for(int col = 0; col < 8; col+=2){
-                board[row][col].setColor(Color.GREEN);
-                board[row][col].drawChecker(col, row, g);
-            }
-        for(int row = 7; row < 8; row++)
-            for(int col = 1; col < 8; col+=2){
-                board[row][col].setColor(Color.GREEN);
-                board[row][col].drawChecker(col, row, g);
-
-                //Checker newCheck = new Checker(col, row, SQRSIZE, Color.GREEN);
-                //pieces.get(choice2.x).set(choice2.y, newCheck);
-            }
+        }
 
 
 
@@ -118,19 +124,21 @@ public class Board extends JPanel implements MouseListener{
         System.out.println(xPos +" "+ yPos);
 
         if(choice1.x == -1){
+            System.out.println("testpoint3");
             choice1.x = xPos;
             choice1.y = yPos;
         } else if(choice1.x == xPos && choice1.y == yPos){
+            System.out.println("testpoint2");
             choice1.x = -1;
             choice1.y = -1;
         } else{
             choice2.x = xPos;
             choice2.y = yPos;
 
-            Checker newCheck = new Checker(choice2, SQRSIZE, Color.ORANGE);
-            pieces.get(choice2.x).set(choice2.y, newCheck);
-            //System.out.println("testpoint1");
-            //board[choice2.x][choice2.y] = newCheck;
+            //Checker newCheck = new Checker(choice2, SQRSIZE, Color.ORANGE);
+            pieces.get(choice2.x).set(choice2.y, pieces.get(choice1.x).remove(choice1.y));
+
+            System.out.println("testpoint1");
             choice1.x = -1;
             choice1.y = -1;
             choice2.x = -1;
