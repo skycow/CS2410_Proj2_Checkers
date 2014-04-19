@@ -81,16 +81,22 @@ public class Board extends JPanel implements MouseListener {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                pieces.get(i).get(j).drawChecker(g);
+                if (pieces.get(i).get(j).getPresence())
+                    pieces.get(i).get(j).drawChecker(g);
             }
         }
     }
 
     public void move() {
-        Checker newCheck = new Checker(choice2, SQRSIZE, pieces.get(choice1.x).get(choice1.y).getColor());
+        Checker newCheck = new Checker(choice2, SQRSIZE, pieces.get(choice1.x).get(choice1.y).getColor(), pieces.get(choice1.x).get(choice1.y).getKing());
+        if(turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0)
+            newCheck.setKing(true);
         pieces.get(choice2.x).set(choice2.y, newCheck);
         Checker newCheck2 = new Checker(choice1.x, choice1.y, false);
         pieces.get(choice1.x).set(choice1.y, newCheck2);
+        turn = (turn == player1) ? player2 : player1;
+
+        choice2 = new Point(-1, -1);
     }
 
     public static void main(String[] args) {
@@ -125,31 +131,70 @@ public class Board extends JPanel implements MouseListener {
                 choice1 = new Point(-1, -1);
             } else {
                 if (!pieces.get(xPos).get(yPos).getPresence()) {
-                    /*if (turn == player1) {
-                        if ( (xPos == choice1.x+1 || xPos == choice1.x-1) && yPos == choice1.y + 1 ) {
+                    //special cases//
+                    //top going down
+                    if (turn == player1) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1)||pieces.get(choice1.x).get(choice1.y).getKing())) {
                             choice2 = new Point(xPos, yPos);
                             move();
-                            turn = (turn == player1) ? player2 : player1;
                             choice1 = new Point(-1, -1);
-                            choice2 = new Point(-1, -1);
+                        }
+                        //check left
+                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2)) {
+                            if (pieces.get(choice1.x - 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y + 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
+                                pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                        //check right
+                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2)) {
+                            if (pieces.get(choice1.x + 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y + 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
+                                pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
                         }
                     }
-                    if (turn == player2) {
-                        if (true) {*/
+                    //bottom going up
+                    else if (turn == player2) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1)||pieces.get(choice1.x).get(choice1.y).getKing())) {
                             choice2 = new Point(xPos, yPos);
                             move();
-                            turn = (turn == player1) ? player2 : player1;
                             choice1 = new Point(-1, -1);
-                            choice2 = new Point(-1, -1);
-                        //}
-                    //}
+                        }
+                        //check left
+                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2)) {
+                            if (pieces.get(choice1.x - 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y - 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
+                                pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                        //check right
+                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2)) {
+                            if (pieces.get(choice1.x + 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y - 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
+                                pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                    }
+                    //end special cases
                 }
-
             }
             repaint();
         }
-
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {

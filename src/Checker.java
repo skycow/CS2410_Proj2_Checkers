@@ -19,6 +19,7 @@ public class Checker {
         //yPos = inY;
         color = null;
         present = presIn;
+        king = false;
 
     }
 
@@ -28,14 +29,16 @@ public class Checker {
         radius = (size - 20) / 2;
         color = colorIn;
         present = true;
+        king = false;
     }
 
-    public Checker(Point choice, int SQRSIZE, Color colorIn) {
+    public Checker(Point choice, int SQRSIZE, Color colorIn, boolean kingIn) {
         xPos = choice.x;
         yPos = choice.y;
         radius = (SQRSIZE - 20) / 2;
         color = colorIn;
         present = true;
+        king = kingIn;
 
 
     }
@@ -58,6 +61,10 @@ public class Checker {
         return present;
     }
 
+    public void setKing(boolean kingIn) { king = kingIn; }
+
+    public boolean getKing() { return king; }
+
     public void drawChecker(Graphics g) {
         //if (!present) {
             g.setColor(color);
@@ -67,9 +74,10 @@ public class Checker {
                 g.drawOval(80 * xPos + 10, 80 * yPos + 10, 60, 60);
                 g.drawOval(80 * xPos + 11, 80 * yPos + 11, 58, 58);
                 g.drawOval(80 * xPos + 12, 80 * yPos + 12, 56, 56);
-                //king
-                //g.fillOval(80 * xPos + 25, 80 * yPos + 25, 30, 30);
-            //}
+            }
+            if(king){
+                g.setColor(Color.ORANGE);
+                g.fillOval(80 * xPos + 25, 80 * yPos + 25, 30, 30);
         }
     }
 }
