@@ -13,7 +13,7 @@ public class CheckersGame extends JFrame {
         super("Checkers!");
 
         Board panel = new Board();
-        JLabel player1 = new JLabel("Player 1");
+        JLabel player1 = new JLabel("Turn");
 
         Container pane = getContentPane();
         pane.setLayout(null);

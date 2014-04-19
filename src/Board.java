@@ -18,6 +18,7 @@ public class Board extends JPanel implements MouseListener {
     private Color player1 = Color.BLUE, player2 = Color.GREEN, turn = player1;
     private JLabel jla = new JLabel("hello");
     private int p1Check=8, p2Check=8;
+    private boolean second = false;
     //private int turn = 1;
 
     public Board() {
@@ -107,11 +108,7 @@ public class Board extends JPanel implements MouseListener {
         if(!kinged)
             turn = (turn == player1) ? player2 : player1;
 
-        choice2 = new Point(-1, -1);
-    }
-    
-    public void doubleJumpCheck(){
-        ////////////
+
     }
 
     /*public static void main(String[] args) {
@@ -149,10 +146,11 @@ public class Board extends JPanel implements MouseListener {
                     //special cases//
                     //top going down
                     if (turn == player1) {
-                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y - 1)))) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y - 1))) && !second) {
                             choice2 = new Point(xPos, yPos);
                             move();
                             choice1 = new Point(-1, -1);
+                            choice2 = new Point(-1, -1);
                         }
                         //check left
                         else if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2)) {
@@ -162,13 +160,27 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
                                 p1Check -= 1;
-                                if (p1Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
-                                }
-                                doubleJumpCheck();
 
-                                choice1 = new Point(-1, -1);
+                                //check for double jump
+                                if(xPos == (choice2.x - 2) && yPos == (choice2.y + 2)){
+                                    if(pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
+                                }
+                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y + 2)){
+                                    if(pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
+                                }
+                                //end check for double jump
+                                else choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
@@ -179,11 +191,26 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
                                 p1Check -= 1;
-                                if (p1Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
+                                //check for double jump
+                                if(xPos == (choice2.x - 2) && yPos == (choice2.y + 2)){
+                                    if(pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
                                 }
-                                choice1 = new Point(-1, -1);
+                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y + 2)){
+                                    if(pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
+                                }
+                                //end check for double jump
+                                else choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //king jumps backward
@@ -195,6 +222,7 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
                                 choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
@@ -205,20 +233,18 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
                                 p1Check -= 1;
-                                if (p1Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
-                                }
                                 choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                     }
                     //bottom going up
                     else if (turn == player2) {
-                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y + 1)))) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y + 1))) && !second) {
                             choice2 = new Point(xPos, yPos);
                             move();
                             choice1 = new Point(-1, -1);
+                            choice2 = new Point(-1, -1);
                         }
                         //check left
                         else if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2)) {
@@ -228,11 +254,26 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
                                 p2Check -= 1;
-                                if (p2Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
+                                //check for double jump
+                                if(xPos == (choice2.x - 2) && yPos == (choice2.y - 2)){
+                                    if(pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
                                 }
-                                choice1 = new Point(-1, -1);
+                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y - 2)){
+                                    if(pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
+                                }
+                                //end check for double jump
+                                else choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
@@ -243,11 +284,26 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
                                 p2Check -= 1;
-                                if (p2Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
+                                //check for double jump
+                                if(xPos == (choice2.x - 2) && yPos == (choice2.y - 2)){
+                                    if(pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
                                 }
-                                choice1 = new Point(-1, -1);
+                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y - 2)){
+                                    if(pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn){
+                                        choice1 = choice2;
+                                        turn = (turn == player1) ? player2 : player1;
+                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                        second = true;
+                                    }
+                                }
+                                //end check for double jump
+                                else choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //backwards king jumps
@@ -259,11 +315,8 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
                                 p2Check -= 1;
-                                if (p2Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
-                                }
                                 choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
@@ -274,11 +327,8 @@ public class Board extends JPanel implements MouseListener {
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
                                 p2Check -= 1;
-                                if (p2Check == 0){
-                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
-                                    System.exit(0);
-                                }
                                 choice1 = new Point(-1, -1);
+                                choice2 = new Point(-1, -1);
                             }
                         }
                     }
@@ -286,6 +336,14 @@ public class Board extends JPanel implements MouseListener {
                 }
             }
             repaint();
+            if (p1Check == 0){
+                JOptionPane.showMessageDialog(null, "Blue wins!", "Winner", JOptionPane.OK_OPTION);
+                System.exit(0);
+            }
+            else if (p2Check == 0){
+                JOptionPane.showMessageDialog(null, "Green wins!", "Winner", JOptionPane.OK_OPTION);
+                System.exit(0);
+            }
         }
     }
 
