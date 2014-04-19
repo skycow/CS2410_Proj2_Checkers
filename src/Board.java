@@ -17,6 +17,7 @@ public class Board extends JPanel implements MouseListener {
     private Point choice2 = new Point(-1, -1);
     private Color player1 = Color.BLUE, player2 = Color.GREEN, turn = player1;
     private JLabel jla = new JLabel("hello");
+    private int p1Check=8, p2Check=8;
     //private int turn = 1;
 
     public Board() {
@@ -152,6 +153,12 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
+                                p1Check -= 1;
+                                if (p1Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
+
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -162,6 +169,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
+                                p1Check -= 1;
+                                if (p1Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -183,6 +195,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
+                                p1Check -= 1;
+                                if (p1Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -201,6 +218,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
+                                p2Check -= 1;
+                                if (p2Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -211,6 +233,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
+                                p2Check -= 1;
+                                if (p2Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -222,6 +249,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
+                                p2Check -= 1;
+                                if (p2Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
@@ -232,6 +264,11 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
+                                p2Check -= 1;
+                                if (p2Check == 0){
+                                    JOptionPane.showMessageDialog(null, "Player 2 wins!", "Winner", JOptionPane.OK_OPTION);
+                                    System.exit(0);
+                                }
                                 choice1 = new Point(-1, -1);
                             }
                         }
