@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Board extends JPanel implements MouseListener {
     //private int turn = 1;
 
     public Board() {
-        setPreferredSize(new Dimension(640, 640));
+        //setPreferredSize(new Dimension(640, 640));
         addMouseListener(this);
         //initalizing 2d array
         for (int i = 0; i < 8; i++) {
@@ -99,7 +100,7 @@ public class Board extends JPanel implements MouseListener {
         choice2 = new Point(-1, -1);
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         JFrame frame = new JFrame("Checkers");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -107,7 +108,7 @@ public class Board extends JPanel implements MouseListener {
         frame.pack();
         frame.setVisible(true);
         frame.setResizable(false);
-    }
+    }*/
 
     @Override
     public void mouseClicked(MouseEvent e) {

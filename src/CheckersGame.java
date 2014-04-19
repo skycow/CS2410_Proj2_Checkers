@@ -4,28 +4,38 @@ import java.awt.*;
 /**
  * Created by Skyler on 4/17/14.
  */
-public class CheckersGame {
-    private Point choice1, choice2;
+public class CheckersGame extends JFrame {
 
-    public CheckersGame(){
-    //for pieces moving up
-    if(choice2.y == choice1.y-1 &&
-            (choice2.x == choice1.x-1 ||
-             choice2.x == choice1.x+1)/*&&
-            board[choice2.x][choice1.y] == null*/){
-                //move checker to choice2
+    private static final int WINDOW_WIDTH = 750;
+    private static final int WINDOW_HEIGHT = 700;
+
+    public CheckersGame() {
+        super("Checkers!");
+
+        Board panel = new Board();
+        JLabel player1 = new JLabel("Player 1");
+
+        Container pane = getContentPane();
+        pane.setLayout(null);
+
+        panel.setSize(640, 640);
+        player1.setSize(60, 25);
+
+        panel.setLocation(0,0);
+        player1.setLocation(640, 0);
+
+        pane.add(panel);
+        pane.add(player1);
+
+
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        setVisible(true);
     }
 
-    //for pieces moving up
-        if(choice2.y == choice1.y+1 &&
-                (choice2.x == choice1.x+1 ||
-                 choice2.x == choice1.x-1)/*&&
-            board[choice2.x][choice1.y] == null*/){
-        //move checker to choice2
-        }
 
-
-
-
+    public static void main(String[] args) {
+        new CheckersGame();
     }
 }
