@@ -95,15 +95,23 @@ public class Board extends JPanel implements MouseListener {
     }
 
     public void move() {
+        boolean kinged = false;
         Checker newCheck = new Checker(choice2, SQRSIZE, pieces.get(choice1.x).get(choice1.y).getColor(), pieces.get(choice1.x).get(choice1.y).getKing());
-        if (turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0)
+        if (turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0){
             newCheck.setKing(true);
+            kinged = true;
+        }
         pieces.get(choice2.x).set(choice2.y, newCheck);
         Checker newCheck2 = new Checker(choice1.x, choice1.y, false);
         pieces.get(choice1.x).set(choice1.y, newCheck2);
-        turn = (turn == player1) ? player2 : player1;
+        if(!kinged)
+            turn = (turn == player1) ? player2 : player1;
 
         choice2 = new Point(-1, -1);
+    }
+    
+    public void doubleJumpCheck(){
+        ////////////
     }
 
     /*public static void main(String[] args) {
@@ -158,6 +166,7 @@ public class Board extends JPanel implements MouseListener {
                                     JOptionPane.showMessageDialog(null, "Player 1 wins!", "Winner", JOptionPane.OK_OPTION);
                                     System.exit(0);
                                 }
+                                doubleJumpCheck();
 
                                 choice1 = new Point(-1, -1);
                             }
