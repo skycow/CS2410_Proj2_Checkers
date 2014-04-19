@@ -65,19 +65,19 @@ public class Checker {
 
     public boolean getKing() { return king; }
 
-    public void drawChecker(Graphics g) {
+    public void drawChecker(Graphics g, int sqrsize) {
         //if (!present) {
             g.setColor(color);
-            g.fillOval(80 * xPos + 10, 80 * yPos + 10, 60, 60);
+            g.fillOval(sqrsize * xPos + 10, sqrsize * yPos + 10, sqrsize-20, sqrsize-20);
             if (selected) {
                 g.setColor(Color.ORANGE);
-                g.drawOval(80 * xPos + 10, 80 * yPos + 10, 60, 60);
-                g.drawOval(80 * xPos + 11, 80 * yPos + 11, 58, 58);
-                g.drawOval(80 * xPos + 12, 80 * yPos + 12, 56, 56);
+                g.drawOval(sqrsize * xPos + 10, sqrsize * yPos + 10, sqrsize-20, sqrsize-20);
+                g.drawOval(sqrsize * xPos + 11, sqrsize * yPos + 11, sqrsize-22, sqrsize-22);
+                g.drawOval(sqrsize * xPos + 12, sqrsize * yPos + 12, sqrsize-24, sqrsize-24);
             }
             if(king){
                 g.setColor(Color.ORANGE);
-                g.fillOval(80 * xPos + 25, 80 * yPos + 25, 30, 30);
+                g.fillOval(sqrsize * xPos + 25, sqrsize * yPos + 25, sqrsize/2-10, sqrsize/2-10);
         }
     }
 }

@@ -16,9 +16,11 @@ public class Board extends JPanel implements MouseListener {
     private Point choice1 = new Point(-1, -1);
     private Point choice2 = new Point(-1, -1);
     private Color player1 = Color.BLUE, player2 = Color.GREEN, turn = player1;
+    private JLabel jla = new JLabel("hello");
     //private int turn = 1;
 
     public Board() {
+
         //setPreferredSize(new Dimension(640, 640));
         addMouseListener(this);
         //initalizing 2d array
@@ -83,14 +85,17 @@ public class Board extends JPanel implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pieces.get(i).get(j).getPresence())
-                    pieces.get(i).get(j).drawChecker(g);
+                    pieces.get(i).get(j).drawChecker(g, SQRSIZE);
             }
         }
+
+        g.setColor(turn);
+        g.fillOval(SQRSIZE * 8 + 10, 0, SQRSIZE - 20, SQRSIZE - 20);
     }
 
     public void move() {
         Checker newCheck = new Checker(choice2, SQRSIZE, pieces.get(choice1.x).get(choice1.y).getColor(), pieces.get(choice1.x).get(choice1.y).getKing());
-        if(turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0)
+        if (turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0)
             newCheck.setKing(true);
         pieces.get(choice2.x).set(choice2.y, newCheck);
         Checker newCheck2 = new Checker(choice1.x, choice1.y, false);
@@ -135,7 +140,7 @@ public class Board extends JPanel implements MouseListener {
                     //special cases//
                     //top going down
                     if (turn == player1) {
-                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1)||pieces.get(choice1.x).get(choice1.y).getKing())) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y - 1)))) {
                             choice2 = new Point(xPos, yPos);
                             move();
                             choice1 = new Point(-1, -1);
@@ -160,10 +165,31 @@ public class Board extends JPanel implements MouseListener {
                                 choice1 = new Point(-1, -1);
                             }
                         }
+                        //king jumps backward
+                        //check left
+                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                            if (pieces.get(choice1.x - 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y - 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
+                                pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                        //check right
+                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                            if (pieces.get(choice1.x + 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y - 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
+                                pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
                     }
                     //bottom going up
                     else if (turn == player2) {
-                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1)||pieces.get(choice1.x).get(choice1.y).getKing())) {
+                        if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y + 1)))) {
                             choice2 = new Point(xPos, yPos);
                             move();
                             choice1 = new Point(-1, -1);
@@ -185,6 +211,27 @@ public class Board extends JPanel implements MouseListener {
                                 move();
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                        //backwards king jumps
+                        //check left
+                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                            if (pieces.get(choice1.x - 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y + 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
+                                pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
+                                choice1 = new Point(-1, -1);
+                            }
+                        }
+                        //check right
+                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                            if (pieces.get(choice1.x + 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y + 1).getColor() != turn) {
+                                choice2 = new Point(xPos, yPos);
+                                move();
+                                Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
+                                pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
                                 choice1 = new Point(-1, -1);
                             }
                         }
