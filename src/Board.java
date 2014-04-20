@@ -17,9 +17,10 @@ public class Board extends JPanel implements MouseListener {
     private Point choice2 = new Point(-1, -1);
     private Color player1 = Color.BLUE, player2 = Color.GREEN, turn = player1;
     private JLabel jla = new JLabel("hello");
-    private int p1Check=8, p2Check=8;
+    private int p1Check = 8, p2Check = 8;
     private boolean second = false;
     //private int turn = 1;
+    private int winner = 0;
 
     public Board() {
 
@@ -60,6 +61,7 @@ public class Board extends JPanel implements MouseListener {
                 pieces.get(col).set(row, newCheck);
             }
 
+
     }
 
     public void paintComponent(Graphics g) {
@@ -96,17 +98,14 @@ public class Board extends JPanel implements MouseListener {
     }
 
     public void move() {
-        boolean kinged = false;
         Checker newCheck = new Checker(choice2, SQRSIZE, pieces.get(choice1.x).get(choice1.y).getColor(), pieces.get(choice1.x).get(choice1.y).getKing());
-        if (turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0){
+        if (turn == player1 && choice2.y == 7 || turn == player2 && choice2.y == 0) {
             newCheck.setKing(true);
-            kinged = true;
         }
         pieces.get(choice2.x).set(choice2.y, newCheck);
         Checker newCheck2 = new Checker(choice1.x, choice1.y, false);
         pieces.get(choice1.x).set(choice1.y, newCheck2);
-        if(!kinged)
-            turn = (turn == player1) ? player2 : player1;
+        second = false;
 
 
     }
@@ -124,6 +123,8 @@ public class Board extends JPanel implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
+        winner = 1;
+
         int xPos = (e.getX() / SQRSIZE);
         int yPos = (e.getY() / SQRSIZE);
 
@@ -138,7 +139,7 @@ public class Board extends JPanel implements MouseListener {
                         pieces.get(choice1.x).get(choice1.y).setSelected(true);
                     }
                 }
-            } else if (choice1.x == xPos && choice1.y == yPos) {
+            } else if (choice1.x == xPos && choice1.y == yPos && !second) {
                 pieces.get(choice1.x).get(choice1.y).setSelected(false);
                 choice1 = new Point(-1, -1);
             } else {
@@ -149,11 +150,12 @@ public class Board extends JPanel implements MouseListener {
                         if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y + 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y - 1))) && !second) {
                             choice2 = new Point(xPos, yPos);
                             move();
+                            turn = (turn == player1) ? player2 : player1;
                             choice1 = new Point(-1, -1);
                             choice2 = new Point(-1, -1);
                         }
                         //check left
-                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2)) {
+                        if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2)) {
                             if (pieces.get(choice1.x - 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y + 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
@@ -162,29 +164,37 @@ public class Board extends JPanel implements MouseListener {
                                 p1Check -= 1;
 
                                 //check for double jump
-                                if(xPos == (choice2.x - 2) && yPos == (choice2.y + 2)){
-                                    if(pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x > 1 && choice2.y < 6) {
+                                    if (!pieces.get(choice2.x - 2).get(choice2.y + 2).getPresence()) {
+                                        if (pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
-                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y + 2)){
-                                    if(pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if(choice2.x < 6 && choice2.y < 6){
+                                    if (!pieces.get(choice2.x + 2).get(choice2.y + 2).getPresence()) {
+                                        if (pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
+                                    if(!second){
+                                        turn = (turn == player1) ? player2 : player1;
+                                        choice1 = new Point(-1, -1);
+                                    }
                                 //end check for double jump
-                                else choice1 = new Point(-1, -1);
+
                                 choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
-                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2)) {
+                        if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2)) {
                             if (pieces.get(choice1.x + 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y + 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
@@ -192,33 +202,41 @@ public class Board extends JPanel implements MouseListener {
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
                                 p1Check -= 1;
                                 //check for double jump
-                                if(xPos == (choice2.x - 2) && yPos == (choice2.y + 2)){
-                                    if(pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x > 1 && choice2.y < 6) {
+                                    if (!pieces.get(choice2.x - 2).get(choice2.y + 2).getPresence()) {
+                                        if (pieces.get(choice2.x - 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y + 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
-                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y + 2)){
-                                    if(pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x <6 && choice2.y < 6) {
+                                    if (!pieces.get(choice2.x + 2).get(choice2.y + 2).getPresence()) {
+                                        if (pieces.get(choice2.x + 1).get(choice2.y + 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y + 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
+                                    if(!second){
+                                        turn = (turn == player1) ? player2 : player1;
+                                        choice1 = new Point(-1, -1);
+                                    }
                                 //end check for double jump
-                                else choice1 = new Point(-1, -1);
                                 choice2 = new Point(-1, -1);
                             }
                         }
                         //king jumps backward
                         //check left
-                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                        if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
                             if (pieces.get(choice1.x - 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y - 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
+                                turn = (turn == player1) ? player2 : player1;
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y - 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
                                 choice1 = new Point(-1, -1);
@@ -226,10 +244,11 @@ public class Board extends JPanel implements MouseListener {
                             }
                         }
                         //check right
-                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                        if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
                             if (pieces.get(choice1.x + 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y - 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
+                                turn = (turn == player1) ? player2 : player1;
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y - 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
                                 p1Check -= 1;
@@ -239,15 +258,16 @@ public class Board extends JPanel implements MouseListener {
                         }
                     }
                     //bottom going up
-                    else if (turn == player2) {
+                    if (turn == player2) {
                         if ((xPos == (choice1.x + 1) || xPos == (choice1.x - 1)) && (yPos == (choice1.y - 1) || (pieces.get(choice1.x).get(choice1.y).getKing() && yPos == (choice1.y + 1))) && !second) {
                             choice2 = new Point(xPos, yPos);
                             move();
+                            turn = (turn == player1) ? player2 : player1;
                             choice1 = new Point(-1, -1);
                             choice2 = new Point(-1, -1);
                         }
                         //check left
-                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2)) {
+                        if (xPos == (choice1.x - 2) && yPos == (choice1.y - 2)) {
                             if (pieces.get(choice1.x - 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y - 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
@@ -255,29 +275,37 @@ public class Board extends JPanel implements MouseListener {
                                 pieces.get(choice1.x - 1).set(choice1.y - 1, newCheck2);
                                 p2Check -= 1;
                                 //check for double jump
-                                if(xPos == (choice2.x - 2) && yPos == (choice2.y - 2)){
-                                    if(pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x > 1 && choice2.y > 1 ) {
+                                    if (!pieces.get(choice2.x - 2).get(choice2.y - 2).getPresence()) {
+                                        if (pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
-                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y - 2)){
-                                    if(pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x <6 && choice2.y > 1 ) {
+                                    if (!pieces.get(choice2.x + 2).get(choice2.y - 2).getPresence()) {
+                                        if (pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
+                                    if(!second){
+                                        turn = (turn == player1) ? player2 : player1;
+                                        choice1 = new Point(-1, -1);
+                                    }
                                 //end check for double jump
-                                else choice1 = new Point(-1, -1);
+
                                 choice2 = new Point(-1, -1);
                             }
                         }
                         //check right
-                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2)) {
+                        if (xPos == (choice1.x + 2) && yPos == (choice1.y - 2)) {
                             if (pieces.get(choice1.x + 1).get(choice1.y - 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y - 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
@@ -285,33 +313,43 @@ public class Board extends JPanel implements MouseListener {
                                 pieces.get(choice1.x + 1).set(choice1.y - 1, newCheck2);
                                 p2Check -= 1;
                                 //check for double jump
-                                if(xPos == (choice2.x - 2) && yPos == (choice2.y - 2)){
-                                    if(pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x > 1 && choice2.y > 1) {
+                                    if (!pieces.get(choice2.x - 2).get(choice2.y - 2).getPresence()) {
+                                        if (pieces.get(choice2.x - 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x - 1).get(choice2.y - 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
+
                                     }
                                 }
-                                else if(xPos == (choice2.x + 2) && yPos == (choice2.y - 2)){
-                                    if(pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn){
-                                        choice1 = choice2;
-                                        turn = (turn == player1) ? player2 : player1;
-                                        pieces.get(choice1.x).get(choice1.y).setSelected(true);
-                                        second = true;
+                                if (choice2.x <6 && choice2.y > 1) {
+                                    if (!pieces.get(choice2.x + 2).get(choice2.y - 2).getPresence()) {
+                                        if (pieces.get(choice2.x + 1).get(choice2.y - 1).getPresence() && pieces.get(choice2.x + 1).get(choice2.y - 1).getColor() != turn) {
+                                            choice1 = choice2;
+                                            //turn = (turn == player1) ? player2 : player1;
+                                            pieces.get(choice1.x).get(choice1.y).setSelected(true);
+                                            second = true;
+                                        }
                                     }
                                 }
+                                    if(!second){
+                                        turn = (turn == player1) ? player2 : player1;
+                                        choice1 = new Point(-1, -1);
+                                    }
                                 //end check for double jump
-                                else choice1 = new Point(-1, -1);
+
                                 choice2 = new Point(-1, -1);
                             }
                         }
                         //backwards king jumps
                         //check left
-                        else if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                        if (xPos == (choice1.x - 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
                             if (pieces.get(choice1.x - 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x - 1).get(choice1.y + 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
+                                turn = (turn == player1) ? player2 : player1;
                                 Checker newCheck2 = new Checker(choice1.x - 1, choice1.y + 1, false);
                                 pieces.get(choice1.x - 1).set(choice1.y + 1, newCheck2);
                                 p2Check -= 1;
@@ -320,10 +358,11 @@ public class Board extends JPanel implements MouseListener {
                             }
                         }
                         //check right
-                        else if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
+                        if (xPos == (choice1.x + 2) && yPos == (choice1.y + 2) && pieces.get(choice1.x).get(choice1.y).getKing()) {
                             if (pieces.get(choice1.x + 1).get(choice1.y + 1).getPresence() && pieces.get(choice1.x + 1).get(choice1.y + 1).getColor() != turn) {
                                 choice2 = new Point(xPos, yPos);
                                 move();
+                                turn = (turn == player1) ? player2 : player1;
                                 Checker newCheck2 = new Checker(choice1.x + 1, choice1.y + 1, false);
                                 pieces.get(choice1.x + 1).set(choice1.y + 1, newCheck2);
                                 p2Check -= 1;
@@ -336,13 +375,12 @@ public class Board extends JPanel implements MouseListener {
                 }
             }
             repaint();
-            if (p1Check == 0){
+            if (p1Check == 0) {
                 JOptionPane.showMessageDialog(null, "Blue wins!", "Winner", JOptionPane.OK_OPTION);
-                System.exit(0);
-            }
-            else if (p2Check == 0){
+                //return 1;
+            } else if (p2Check == 0) {
                 JOptionPane.showMessageDialog(null, "Green wins!", "Winner", JOptionPane.OK_OPTION);
-                System.exit(0);
+                //return 2;
             }
         }
     }

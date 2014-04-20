@@ -28,8 +28,8 @@ public class CheckersGame extends JFrame {
         pane.add(player1);
         pane.add(panel);
 
-
-
+       //int winner = panel.getWinners();
+        //System.out.println(winner);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
